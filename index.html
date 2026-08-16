@@ -1,0 +1,3969 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Medical Passport</title>
+
+<style>
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+:root {
+    --primary: #5b6ee1;
+    --primary-dark: #4052c5;
+    --secondary: #14b8a6;
+    --danger: #ef6470;
+    --warning: #f4b942;
+
+    --bg: #f4f7fb;
+    --surface: #ffffff;
+    --surface-soft: #f8faff;
+
+    --text: #1f2937;
+    --text-soft: #6b7280;
+    --border: #e5e7eb;
+
+    --shadow: 0 12px 35px rgba(31, 41, 55, .08);
+    --radius: 20px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family:
+        "Noto Sans TC",
+        "Noto Sans JP",
+        "Noto Sans",
+        Arial,
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(91,110,225,.12),
+            transparent 35%
+        ),
+        var(--bg);
+
+    color: var(--text);
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 14px 24px;
+
+    background: rgba(255,255,255,.88);
+    backdrop-filter: blur(18px);
+
+    border-bottom: 1px solid rgba(229,231,235,.8);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 44px;
+    height: 44px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 14px;
+
+    color: white;
+    font-size: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    box-shadow:
+        0 8px 20px rgba(91,110,225,.25);
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.brand span {
+    color: var(--text-soft);
+    font-size: 12px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+button,
+select,
+input,
+textarea {
+    font: inherit;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+}
+
+.btn {
+    padding: 10px 14px;
+    border-radius: 12px;
+
+    background: var(--surface);
+    color: var(--text);
+
+    border: 1px solid var(--border);
+
+    transition: .2s;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.btn-danger {
+    background: #fff0f1;
+    color: #d94350;
+    border-color: #ffd2d6;
+}
+
+.language-select {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: white;
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.app {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+
+    min-height: calc(100vh - 73px);
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: sticky;
+    top: 73px;
+
+    height: calc(100vh - 73px);
+
+    padding: 22px 14px;
+
+    background: rgba(255,255,255,.75);
+    border-right: 1px solid var(--border);
+
+    overflow-y: auto;
+}
+
+.nav-title {
+    margin: 8px 12px 12px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.nav-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 14px;
+    margin-bottom: 5px;
+
+    border-radius: 13px;
+
+    color: var(--text-soft);
+    background: transparent;
+
+    text-align: left;
+
+    transition: .2s;
+}
+
+.nav-item:hover {
+    background: #eef1ff;
+    color: var(--primary);
+}
+
+.nav-item.active {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(91,110,225,.14),
+            rgba(20,184,166,.06)
+        );
+
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.nav-icon {
+    width: 22px;
+    text-align: center;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+    max-width: 1400px;
+    width: 100%;
+
+    margin: auto;
+    padding: 30px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+
+    padding: 30px;
+
+    border-radius: 28px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5366dc 0%,
+            #667eea 45%,
+            #18b7a5 100%
+        );
+
+    box-shadow:
+        0 20px 50px rgba(83,102,220,.25);
+}
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+    width: 300px;
+    height: 300px;
+
+    right: -100px;
+    top: -130px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.12);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero h2 {
+    margin: 0 0 8px;
+    font-size: clamp(24px, 4vw, 36px);
+}
+
+.hero p {
+    margin: 0;
+
+    max-width: 650px;
+
+    color: rgba(255,255,255,.85);
+}
+
+.hero-actions {
+    margin-top: 22px;
+
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hero .btn {
+    background: rgba(255,255,255,.16);
+    color: white;
+    border-color: rgba(255,255,255,.25);
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(210px, 1fr));
+
+    gap: 16px;
+
+    margin: 22px 0;
+}
+
+.stat-card {
+    padding: 20px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 13px;
+
+    background: #eef1ff;
+
+    font-size: 20px;
+}
+
+.stat-number {
+    margin-top: 15px;
+
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.stat-label {
+    margin-top: 3px;
+
+    color: var(--text-soft);
+    font-size: 13px;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section {
+    display: none;
+    animation: fadeIn .25s ease;
+}
+
+.section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-header {
+    margin: 30px 0 18px;
+}
+
+.section-header h2 {
+    margin: 0 0 6px;
+    font-size: 24px;
+}
+
+.section-header p {
+    margin: 0;
+    color: var(--text-soft);
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    padding: 22px;
+
+    margin-bottom: 18px;
+
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+.card-title h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.card-title span {
+    font-size: 20px;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(12, 1fr);
+
+    gap: 16px;
+}
+
+.field {
+    grid-column: span 6;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+.field.third {
+    grid-column: span 4;
+}
+
+.field label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: #4b5563;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: #fbfcfe;
+
+    color: var(--text);
+
+    outline: none;
+
+    transition: .2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+
+    background: white;
+
+    box-shadow:
+        0 0 0 4px rgba(91,110,225,.10);
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* =========================================================
+   ALERT CARDS
+========================================================= */
+
+.alert {
+    display: flex;
+    gap: 14px;
+
+    padding: 16px;
+
+    border-radius: 15px;
+
+    margin-bottom: 18px;
+}
+
+.alert-icon {
+    font-size: 22px;
+}
+
+.alert-danger {
+    background: #fff1f2;
+    border: 1px solid #ffd6da;
+}
+
+.alert-info {
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+}
+
+.alert strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 13px;
+
+    border-bottom: 1px solid var(--border);
+
+    text-align: left;
+
+    font-size: 13px;
+}
+
+th {
+    color: var(--text-soft);
+    font-size: 12px;
+}
+
+tbody tr:hover {
+    background: var(--surface-soft);
+}
+
+/* =========================================================
+   TAGS
+========================================================= */
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    padding: 7px 10px;
+
+    border-radius: 999px;
+
+    background: #eef1ff;
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   REPEATABLE ITEMS
+========================================================= */
+
+.repeat-list {
+    display: grid;
+    gap: 12px;
+}
+
+.repeat-item {
+    padding: 15px;
+
+    background: var(--surface-soft);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.repeat-item strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.repeat-item small {
+    color: var(--text-soft);
+}
+
+.remove-btn {
+    align-self: flex-start;
+
+    padding: 7px 10px;
+
+    border-radius: 9px;
+
+    background: #fff1f2;
+    color: #d94350;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+    margin-top: 40px;
+
+    text-align: center;
+
+    color: var(--text-soft);
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark {
+    --bg: #101522;
+    --surface: #171d2b;
+    --surface-soft: #1d2535;
+
+    --text: #f3f4f6;
+    --text-soft: #9ca3af;
+
+    --border: #293346;
+}
+
+body.dark .topbar,
+body.dark .sidebar {
+    background: rgba(16,21,34,.88);
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea {
+    background: #111827;
+    color: #f3f4f6;
+}
+
+body.dark .btn {
+    background: #1d2535;
+    color: #f3f4f6;
+}
+
+body.dark .stat-icon {
+    background: #252d49;
+}
+
+body.dark .nav-item:hover,
+body.dark .nav-item.active {
+    background: #252d49;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+.mobile-menu {
+    display: none;
+}
+
+@media(max-width: 900px) {
+
+    .app {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: fixed;
+
+        left: -280px;
+        top: 73px;
+
+        width: 260px;
+
+        z-index: 999;
+
+        transition: .25s;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .main {
+        padding: 18px;
+    }
+
+    .header-actions .hide-mobile {
+        display: none;
+    }
+
+    .field,
+    .field.third {
+        grid-column: 1 / -1;
+    }
+
+    .hero {
+        padding: 23px;
+    }
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+
+    .topbar,
+    .sidebar,
+    .hero-actions,
+    .footer,
+    button {
+        display: none !important;
+    }
+
+    .app {
+        display: block;
+    }
+
+    .main {
+        max-width: none;
+        padding: 0;
+    }
+
+    .section {
+        display: block !important;
+    }
+
+    body {
+        background: white;
+    }
+
+    .card {
+        box-shadow: none;
+        break-inside: avoid;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================
+     HEADER
+======================================================= -->
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <button
+            class="btn mobile-menu"
+            onclick="toggleSidebar()">
+            ☰
+        </button>
+
+        <div class="brand-icon">
+            ♥
+        </div>
+
+        <div>
+            <h1 data-i18n="appName">
+                My Medical Passport
+            </h1>
+
+            <span data-i18n="appSubtitle">
+                Personal Medical Record
+            </span>
+        </div>
+
+    </div>
+
+    <div class="header-actions">
+
+        <select
+            id="language"
+            class="language-select"
+            onchange="changeLanguage(this.value)">
+
+            <option value="zh">繁體中文</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="vi">Tiếng Việt</option>
+            <option value="th">ภาษาไทย</option>
+
+        </select>
+
+        <button
+            class="btn hide-mobile"
+            onclick="toggleDarkMode()"
+            title="Dark Mode">
+
+            ◐
+
+        </button>
+
+        <button
+            class="btn hide-mobile"
+            onclick="window.print()">
+
+            🖨️
+            <span data-i18n="print">列印</span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="app">
+
+<!-- =======================================================
+     SIDEBAR
+======================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="nav-title" data-i18n="medicalRecord">
+        Medical Record
+    </div>
+
+    <button class="nav-item active"
+            onclick="showSection('dashboard',this)">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="dashboard">總覽</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('personal',this)">
+        <span class="nav-icon">🪪</span>
+        <span data-i18n="personal">個人資料</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('emergency',this)">
+        <span class="nav-icon">🚨</span>
+        <span data-i18n="emergency">緊急醫療資訊</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('conditions',this)">
+        <span class="nav-icon">🩺</span>
+        <span data-i18n="conditions">疾病與病史</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('medications',this)">
+        <span class="nav-icon">💊</span>
+        <span data-i18n="medications">用藥史</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('allergies',this)">
+        <span class="nav-icon">⚠️</span>
+        <span data-i18n="allergies">過敏史</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('surgeries',this)">
+        <span class="nav-icon">🔪</span>
+        <span data-i18n="surgeries">手術／住院史</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('family',this)">
+        <span class="nav-icon">👨‍👩‍👧</span>
+        <span data-i18n="family">家族史</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('vaccines',this)">
+        <span class="nav-icon">💉</span>
+        <span data-i18n="vaccines">疫苗</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('lifestyle',this)">
+        <span class="nav-icon">🌿</span>
+        <span data-i18n="lifestyle">生活史</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('providers',this)">
+        <span class="nav-icon">👩‍⚕️</span>
+        <span data-i18n="providers">醫師與醫療院所</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('documents',this)">
+        <span class="nav-icon">📄</span>
+        <span data-i18n="documents">醫療文件</span>
+    </button>
+
+    <button class="nav-item"
+            onclick="showSection('notes',this)">
+        <span class="nav-icon">📝</span>
+        <span data-i18n="notes">醫療摘要</span>
+    </button>
+
+    <div class="nav-title" style="margin-top:25px"
+         data-i18n="dataTools">
+        Data
+    </div>
+
+    <button class="nav-item" onclick="exportData()">
+        <span class="nav-icon">📤</span>
+        <span data-i18n="export">匯出資料</span>
+    </button>
+
+    <button class="nav-item" onclick="document.getElementById('importFile').click()">
+        <span class="nav-icon">📥</span>
+        <span data-i18n="import">匯入資料</span>
+    </button>
+
+    <input
+        type="file"
+        id="importFile"
+        accept=".json"
+        style="display:none"
+        onchange="importData(event)"
+    >
+
+</aside>
+
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<main class="main">
+
+<!-- =======================================================
+     DASHBOARD
+======================================================= -->
+
+<section id="dashboard" class="section active">
+
+    <div class="hero">
+
+        <div class="hero-content">
+
+            <h2 data-i18n="welcome">
+                我的隨身電子病歷
+            </h2>
+
+            <p data-i18n="welcomeText">
+                將重要醫療資訊集中在一個地方，讓自己、家人與醫療人員可以快速了解你的健康狀況。
+            </p>
+
+            <div class="hero-actions">
+
+                <button
+                    class="btn"
+                    onclick="showSection('personal', document.querySelector('.nav-item:nth-of-type(2)'))">
+
+                    ＋
+                    <span data-i18n="editProfile">
+                        建立個人資料
+                    </span>
+
+                </button>
+
+                <button
+                    class="btn"
+                    onclick="window.print()">
+
+                    🖨️
+                    <span data-i18n="medicalSummary">
+                        列印醫療摘要
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">👤</div>
+
+            <div class="stat-number"
+                 id="profileStatus">
+                —
+            </div>
+
+            <div class="stat-label"
+                 data-i18n="profile">
+                個人資料
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">💊</div>
+
+            <div class="stat-number"
+                 id="medCount">
+                0
+            </div>
+
+            <div class="stat-label"
+                 data-i18n="currentMedications">
+                目前用藥
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">⚠️</div>
+
+            <div class="stat-number"
+                 id="allergyCount">
+                0
+            </div>
+
+            <div class="stat-label"
+                 data-i18n="allergies">
+                過敏
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">🏥</div>
+
+            <div class="stat-number"
+                 id="surgeryCount">
+                0
+            </div>
+
+            <div class="stat-label"
+                 data-i18n="surgeries">
+                手術／住院
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="alert alert-danger">
+
+        <div class="alert-icon">🚨</div>
+
+        <div>
+
+            <strong data-i18n="emergencyImportant">
+                緊急醫療資訊
+            </strong>
+
+            <div data-i18n="emergencyHint">
+                建議優先填寫血型、嚴重過敏、重要疾病、目前用藥與緊急聯絡人。
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+
+            <span>✨</span>
+
+            <h3 data-i18n="recommended">
+                建議完成的資料
+            </h3>
+
+        </div>
+
+        <div class="tags">
+
+            <span class="tag">Blood Type</span>
+            <span class="tag">Allergy</span>
+            <span class="tag">Medication</span>
+            <span class="tag">Surgery</span>
+            <span class="tag">Family History</span>
+            <span class="tag">Emergency Contact</span>
+            <span class="tag">Vaccination</span>
+            <span class="tag">Medical Summary</span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     PERSONAL
+======================================================= -->
+
+<section id="personal" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="personalTitle">
+            個人資料
+        </h2>
+
+        <p data-i18n="personalDesc">
+            基本身份與重要聯絡資料
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            <span>🪪</span>
+            <h3 data-i18n="basicInfo">
+                基本資料
+            </h3>
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="fullName">姓名</label>
+                <input id="fullName" data-save placeholder="例如：王小明">
+            </div>
+
+            <div class="field">
+                <label data-i18n="preferredName">慣用姓名</label>
+                <input id="preferredName" data-save>
+            </div>
+
+            <div class="field third">
+                <label data-i18n="dob">出生日期</label>
+                <input id="dob" data-save type="date">
+            </div>
+
+            <div class="field third">
+                <label data-i18n="gender">性別</label>
+                <select id="gender" data-save>
+                    <option value="">—</option>
+                    <option>Female</option>
+                    <option>Male</option>
+                    <option>Other</option>
+                    <option>Prefer not to say</option>
+                </select>
+            </div>
+
+            <div class="field third">
+                <label data-i18n="bloodType">血型</label>
+                <select id="bloodType" data-save>
+                    <option value="">—</option>
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                    <option>Unknown</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label data-i18n="nationality">國籍</label>
+                <input id="nationality" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="idNumber">身分識別碼（選填）</label>
+                <input id="idNumber" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="phone">電話</label>
+                <input id="phone" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="email">Email</label>
+                <input id="email" data-save type="email">
+            </div>
+
+            <div class="field full">
+                <label data-i18n="address">地址</label>
+                <input id="address" data-save>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            <span>📞</span>
+            <h3 data-i18n="emergencyContact">
+                緊急聯絡人
+            </h3>
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="contactName">姓名</label>
+                <input id="contactName" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="relationship">關係</label>
+                <input id="relationship" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="contactPhone">電話</label>
+                <input id="contactPhone" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="contactEmail">Email</label>
+                <input id="contactEmail" data-save>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     EMERGENCY
+======================================================= -->
+
+<section id="emergency" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="emergencyTitle">
+            緊急醫療資訊
+        </h2>
+
+        <p data-i18n="emergencyDesc">
+            在緊急狀況下最需要被快速看到的資訊
+        </p>
+
+    </div>
+
+
+    <div class="alert alert-danger">
+
+        <div class="alert-icon">⚠️</div>
+
+        <div>
+            <strong data-i18n="criticalInfo">
+                Critical Medical Information
+            </strong>
+
+            <div data-i18n="criticalHint">
+                請將最重要的資訊填寫在這裡。
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="bloodType">血型</label>
+                <input id="emergencyBlood" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="rhFactor">Rh Factor</label>
+                <input id="rhFactor" data-save>
+            </div>
+
+            <div class="field full">
+                <label data-i18n="severeAllergies">
+                    嚴重過敏
+                </label>
+
+                <textarea
+                    id="severeAllergies"
+                    data-save
+                    placeholder="藥物、食物、昆蟲、乳膠……">
+                </textarea>
+            </div>
+
+            <div class="field full">
+                <label data-i18n="criticalConditions">
+                    重要疾病
+                </label>
+
+                <textarea
+                    id="criticalConditions"
+                    data-save>
+                </textarea>
+            </div>
+
+            <div class="field full">
+                <label data-i18n="emergencyNotes">
+                    緊急備註
+                </label>
+
+                <textarea
+                    id="emergencyNotes"
+                    data-save>
+                </textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     CONDITIONS
+======================================================= -->
+
+<section id="conditions" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="conditionsTitle">
+            疾病與既往病史
+        </h2>
+
+        <p data-i18n="conditionsDesc">
+            過去與目前的重要疾病
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field full">
+                <label data-i18n="medicalConditions">
+                    疾病／診斷
+                </label>
+
+                <textarea
+                    id="medicalConditions"
+                    data-save
+                    placeholder="例如：氣喘、高血壓、糖尿病……">
+                </textarea>
+            </div>
+
+            <div class="field full">
+                <label data-i18n="pastHistory">
+                    過去病史
+                </label>
+
+                <textarea
+                    id="pastHistory"
+                    data-save>
+                </textarea>
+            </div>
+
+            <div class="field full">
+                <label data-i18n="hospitalHistory">
+                    住院史
+                </label>
+
+                <textarea
+                    id="hospitalHistory"
+                    data-save>
+                </textarea>
+            </div>
+
+            <div class="field full">
+                <label data-i18n="chronicConditions">
+                    慢性疾病
+                </label>
+
+                <textarea
+                    id="chronicConditions"
+                    data-save>
+                </textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     MEDICATIONS
+======================================================= -->
+
+<section id="medications" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="medicationsTitle">
+            用藥史
+        </h2>
+
+        <p data-i18n="medicationsDesc">
+            目前與過去使用過的重要藥物
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            <span>💊</span>
+            <h3 data-i18n="currentMedication">
+                目前使用藥物
+            </h3>
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="medicineName">
+                    藥物名稱
+                </label>
+
+                <input id="medName">
+            </div>
+
+            <div class="field">
+                <label data-i18n="dose">
+                    劑量
+                </label>
+
+                <input id="medDose">
+            </div>
+
+            <div class="field">
+                <label data-i18n="frequency">
+                    頻率
+                </label>
+
+                <input id="medFrequency">
+            </div>
+
+            <div class="field">
+                <label data-i18n="purpose">
+                    用途
+                </label>
+
+                <input id="medPurpose">
+            </div>
+
+            <div class="field full">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="addMedication()">
+
+                    ＋
+                    <span data-i18n="add">
+                        新增
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            <span>📋</span>
+            <h3 data-i18n="medicationList">
+                用藥清單
+            </h3>
+        </div>
+
+        <div id="medicationList"
+             class="repeat-list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     ALLERGIES
+======================================================= -->
+
+<section id="allergies" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="allergiesTitle">
+            過敏史
+        </h2>
+
+        <p data-i18n="allergiesDesc">
+            藥物、食物、環境與其他過敏
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="allergyItem">
+                    過敏原
+                </label>
+
+                <input id="allergyName">
+            </div>
+
+            <div class="field">
+                <label data-i18n="reaction">
+                    反應
+                </label>
+
+                <input id="allergyReaction">
+            </div>
+
+            <div class="field">
+                <label data-i18n="severity">
+                    嚴重程度
+                </label>
+
+                <select id="allergySeverity">
+                    <option>Unknown</option>
+                    <option>Mild</option>
+                    <option>Moderate</option>
+                    <option>Severe</option>
+                    <option>Anaphylaxis</option>
+                </select>
+            </div>
+
+            <div class="field">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="addAllergy()">
+
+                    ＋
+                    <span data-i18n="add">
+                        新增
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div id="allergyList"
+             class="repeat-list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     SURGERIES
+======================================================= -->
+
+<section id="surgeries" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="surgeriesTitle">
+            手術與住院史
+        </h2>
+
+        <p data-i18n="surgeriesDesc">
+            記錄過去的重要手術、住院與醫療處置
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="procedure">
+                    手術／處置
+                </label>
+
+                <input id="surgeryName">
+            </div>
+
+            <div class="field">
+                <label data-i18n="surgeryDate">
+                    日期
+                </label>
+
+                <input id="surgeryDate" type="date">
+            </div>
+
+            <div class="field">
+                <label data-i18n="hospital">
+                    醫院
+                </label>
+
+                <input id="surgeryHospital">
+            </div>
+
+            <div class="field">
+                <label data-i18n="doctor">
+                    醫師
+                </label>
+
+                <input id="surgeryDoctor">
+            </div>
+
+            <div class="field full">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="addSurgery()">
+
+                    ＋
+                    <span data-i18n="add">
+                        新增
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div id="surgeryList"
+             class="repeat-list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     FAMILY
+======================================================= -->
+
+<section id="family" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="familyTitle">
+            家族病史
+        </h2>
+
+        <p data-i18n="familyDesc">
+            記錄具有醫療意義的家族疾病史
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="familyMember">
+                    家族成員
+                </label>
+
+                <input id="familyMember"
+                       placeholder="父親／母親／兄弟姊妹……">
+            </div>
+
+            <div class="field">
+                <label data-i18n="familyDisease">
+                    疾病
+                </label>
+
+                <input id="familyDisease">
+            </div>
+
+            <div class="field">
+                <label data-i18n="familyAge">
+                    發病年齡
+                </label>
+
+                <input id="familyAge">
+            </div>
+
+            <div class="field">
+                <button
+                    class="btn btn-primary"
+                    onclick="addFamilyHistory()">
+
+                    ＋
+                    <span data-i18n="add">
+                        新增
+                    </span>
+
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div id="familyList"
+             class="repeat-list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     VACCINES
+======================================================= -->
+
+<section id="vaccines" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="vaccinesTitle">
+            疫苗紀錄
+        </h2>
+
+        <p data-i18n="vaccinesDesc">
+            疫苗名稱、日期與接種資訊
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="vaccineName">
+                    疫苗
+                </label>
+
+                <input id="vaccineName">
+            </div>
+
+            <div class="field">
+                <label data-i18n="vaccineDate">
+                    接種日期
+                </label>
+
+                <input id="vaccineDate" type="date">
+            </div>
+
+            <div class="field">
+                <label data-i18n="doseNumber">
+                    第幾劑
+                </label>
+
+                <input id="vaccineDose">
+            </div>
+
+            <div class="field">
+                <button
+                    class="btn btn-primary"
+                    onclick="addVaccine()">
+
+                    ＋
+                    <span data-i18n="add">
+                        新增
+                    </span>
+
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div id="vaccineList"
+             class="repeat-list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     LIFESTYLE
+======================================================= -->
+
+<section id="lifestyle" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="lifestyleTitle">
+            生活史
+        </h2>
+
+        <p data-i18n="lifestyleDesc">
+            生活習慣與可能影響健康的重要資訊
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="smoking">
+                    吸菸
+                </label>
+
+                <select id="smoking" data-save>
+                    <option>Never</option>
+                    <option>Former smoker</option>
+                    <option>Current smoker</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label data-i18n="alcohol">
+                    飲酒
+                </label>
+
+                <select id="alcohol" data-save>
+                    <option>None</option>
+                    <option>Occasional</option>
+                    <option>Regular</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label data-i18n="exercise">
+                    運動
+                </label>
+
+                <input id="exercise" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="occupation">
+                    職業
+                </label>
+
+                <input id="occupation" data-save>
+            </div>
+
+            <div class="field full">
+                <label data-i18n="lifestyleNotes">
+                    其他生活資訊
+                </label>
+
+                <textarea
+                    id="lifestyleNotes"
+                    data-save>
+                </textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     PROVIDERS
+======================================================= -->
+
+<section id="providers" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="providersTitle">
+            醫師與醫療院所
+        </h2>
+
+        <p data-i18n="providersDesc">
+            主要醫師與醫療機構資訊
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="doctorName">
+                    醫師姓名
+                </label>
+
+                <input id="doctorName" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="specialty">
+                    科別
+                </label>
+
+                <input id="specialty" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="clinic">
+                    醫院／診所
+                </label>
+
+                <input id="clinic" data-save>
+            </div>
+
+            <div class="field">
+                <label data-i18n="clinicPhone">
+                    電話
+                </label>
+
+                <input id="clinicPhone" data-save>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     DOCUMENTS
+======================================================= -->
+
+<section id="documents" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="documentsTitle">
+            醫療文件
+        </h2>
+
+        <p data-i18n="documentsDesc">
+            可記錄檢查報告、影像、醫療文件的位置或備註
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label data-i18n="documentName">
+                    文件名稱
+                </label>
+
+                <input id="documentName">
+            </div>
+
+            <div class="field">
+                <label data-i18n="documentDate">
+                    日期
+                </label>
+
+                <input id="documentDate" type="date">
+            </div>
+
+            <div class="field full">
+                <label data-i18n="documentNote">
+                    文件備註
+                </label>
+
+                <textarea id="documentNote"></textarea>
+            </div>
+
+            <div class="field">
+                <button
+                    class="btn btn-primary"
+                    onclick="addDocument()">
+
+                    ＋
+                    <span data-i18n="add">
+                        新增
+                    </span>
+
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div id="documentList"
+             class="repeat-list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     NOTES
+======================================================= -->
+
+<section id="notes" class="section">
+
+    <div class="section-header">
+
+        <h2 data-i18n="notesTitle">
+            醫療摘要
+        </h2>
+
+        <p data-i18n="notesDesc">
+            建議寫成醫師在幾十秒內可以快速理解的摘要
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field full">
+
+                <label data-i18n="medicalSummaryLabel">
+                    我的醫療摘要
+                </label>
+
+                <textarea
+                    id="medicalSummaryText"
+                    data-save
+                    style="min-height:280px"
+                    placeholder="例如：
+重要疾病：
+目前用藥：
+嚴重過敏：
+重要手術：
+特殊醫療需求：
+其他注意事項：">
+                </textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="alert alert-info">
+
+        <div class="alert-icon">💡</div>
+
+        <div>
+
+            <strong data-i18n="summaryTip">
+                小提醒
+            </strong>
+
+            <div data-i18n="summaryTipText">
+                這個區域適合放最重要的醫療資訊，而不是完整病歷。
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="footer">
+
+    <span data-i18n="footer">
+        My Medical Passport · Personal Health Information
+    </span>
+
+    <br>
+
+    <span>
+        Data is stored locally in your browser.
+    </span>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   TRANSLATIONS
+========================================================= */
+
+const translations = {
+
+zh: {
+
+appName:"我的隨身電子病歷",
+appSubtitle:"Personal Medical Record",
+
+medicalRecord:"醫療資料",
+dashboard:"總覽",
+personal:"個人資料",
+emergency:"緊急醫療資訊",
+conditions:"疾病與病史",
+medications:"用藥史",
+allergies:"過敏史",
+surgeries:"手術／住院史",
+family:"家族史",
+vaccines:"疫苗",
+lifestyle:"生活史",
+providers:"醫師與醫療院所",
+documents:"醫療文件",
+notes:"醫療摘要",
+dataTools:"資料工具",
+
+print:"列印",
+export:"匯出資料",
+import:"匯入資料",
+
+welcome:"我的隨身電子病歷",
+welcomeText:"將重要醫療資訊集中在一個地方，讓自己、家人與醫療人員可以快速了解你的健康狀況。",
+
+editProfile:"建立個人資料",
+medicalSummary:"列印醫療摘要",
+
+profile:"個人資料",
+currentMedications:"目前用藥",
+emergencyImportant:"緊急醫療資訊",
+emergencyHint:"建議優先填寫血型、嚴重過敏、重要疾病、目前用藥與緊急聯絡人。",
+recommended:"建議完成的資料",
+
+personalTitle:"個人資料",
+personalDesc:"基本身份與重要聯絡資料",
+basicInfo:"基本資料",
+
+fullName:"姓名",
+preferredName:"慣用姓名",
+dob:"出生日期",
+gender:"性別",
+bloodType:"血型",
+nationality:"國籍",
+idNumber:"身分識別碼（選填）",
+phone:"電話",
+email:"Email",
+address:"地址",
+
+emergencyContact:"緊急聯絡人",
+contactName:"姓名",
+relationship:"關係",
+contactPhone:"電話",
+contactEmail:"Email",
+
+emergencyTitle:"緊急醫療資訊",
+emergencyDesc:"在緊急狀況下最需要被快速看到的資訊",
+criticalInfo:"重要醫療資訊",
+criticalHint:"請將最重要的資訊填寫在這裡。",
+rhFactor:"Rh 因子",
+severeAllergies:"嚴重過敏",
+criticalConditions:"重要疾病",
+emergencyNotes:"緊急備註",
+
+conditionsTitle:"疾病與既往病史",
+conditionsDesc:"過去與目前的重要疾病",
+medicalConditions:"疾病／診斷",
+pastHistory:"過去病史",
+hospitalHistory:"住院史",
+chronicConditions:"慢性疾病",
+
+medicationsTitle:"用藥史",
+medicationsDesc:"目前與過去使用過的重要藥物",
+currentMedication:"目前使用藥物",
+medicineName:"藥物名稱",
+dose:"劑量",
+frequency:"頻率",
+purpose:"用途",
+medicationList:"用藥清單",
+
+allergiesTitle:"過敏史",
+allergiesDesc:"藥物、食物、環境與其他過敏",
+allergyItem:"過敏原",
+reaction:"反應",
+severity:"嚴重程度",
+
+surgeriesTitle:"手術與住院史",
+surgeriesDesc:"記錄過去的重要手術、住院與醫療處置",
+procedure:"手術／處置",
+surgeryDate:"日期",
+hospital:"醫院",
+doctor:"醫師",
+
+familyTitle:"家族病史",
+familyDesc:"記錄具有醫療意義的家族疾病史",
+familyMember:"家族成員",
+familyDisease:"疾病",
+familyAge:"發病年齡",
+
+vaccinesTitle:"疫苗紀錄",
+vaccinesDesc:"疫苗名稱、日期與接種資訊",
+vaccineName:"疫苗",
+vaccineDate:"接種日期",
+doseNumber:"第幾劑",
+
+lifestyleTitle:"生活史",
+lifestyleDesc:"生活習慣與可能影響健康的重要資訊",
+smoking:"吸菸",
+alcohol:"飲酒",
+exercise:"運動",
+occupation:"職業",
+lifestyleNotes:"其他生活資訊",
+
+providersTitle:"醫師與醫療院所",
+providersDesc:"主要醫師與醫療機構資訊",
+doctorName:"醫師姓名",
+specialty:"科別",
+clinic:"醫院／診所",
+clinicPhone:"電話",
+
+documentsTitle:"醫療文件",
+documentsDesc:"可記錄檢查報告、影像、醫療文件的位置或備註",
+documentName:"文件名稱",
+documentDate:"日期",
+documentNote:"文件備註",
+
+notesTitle:"醫療摘要",
+notesDesc:"建議寫成醫師在幾十秒內可以快速理解的摘要",
+medicalSummaryLabel:"我的醫療摘要",
+summaryTip:"小提醒",
+summaryTipText:"這個區域適合放最重要的醫療資訊，而不是完整病歷。",
+
+add:"新增",
+
+footer:"My Medical Passport · 個人健康資訊"
+
+},
+
+en: {
+
+appName:"My Medical Passport",
+appSubtitle:"Personal Medical Record",
+
+medicalRecord:"Medical Record",
+dashboard:"Dashboard",
+personal:"Personal",
+emergency:"Emergency",
+conditions:"Conditions",
+medications:"Medications",
+allergies:"Allergies",
+surgeries:"Surgeries",
+family:"Family History",
+vaccines:"Vaccines",
+lifestyle:"Lifestyle",
+providers:"Healthcare Providers",
+documents:"Documents",
+notes:"Medical Summary",
+dataTools:"Data Tools",
+
+print:"Print",
+export:"Export",
+import:"Import",
+
+welcome:"My Medical Passport",
+welcomeText:"Keep your essential health information organized in one place for yourself, family members, and healthcare professionals.",
+
+editProfile:"Create Profile",
+medicalSummary:"Print Summary",
+
+profile:"Profile",
+currentMedications:"Current Medications",
+emergencyImportant:"Emergency Medical Information",
+emergencyHint:"Prioritize blood type, severe allergies, major conditions, current medications, and emergency contacts.",
+recommended:"Recommended Information",
+
+personalTitle:"Personal Information",
+personalDesc:"Basic identity and contact information",
+basicInfo:"Basic Information",
+
+fullName:"Full Name",
+preferredName:"Preferred Name",
+dob:"Date of Birth",
+gender:"Gender",
+bloodType:"Blood Type",
+nationality:"Nationality",
+idNumber:"Identification Number",
+phone:"Phone",
+email:"Email",
+address:"Address",
+
+emergencyContact:"Emergency Contact",
+contactName:"Name",
+relationship:"Relationship",
+contactPhone:"Phone",
+contactEmail:"Email",
+
+emergencyTitle:"Emergency Medical Information",
+emergencyDesc:"Information that should be easy to find during an emergency",
+criticalInfo:"Critical Medical Information",
+criticalHint:"Enter your most important medical information here.",
+rhFactor:"Rh Factor",
+severeAllergies:"Severe Allergies",
+criticalConditions:"Critical Conditions",
+emergencyNotes:"Emergency Notes",
+
+conditionsTitle:"Medical Conditions & History",
+conditionsDesc:"Important past and current conditions",
+medicalConditions:"Conditions / Diagnoses",
+pastHistory:"Past Medical History",
+hospitalHistory:"Hospitalization History",
+chronicConditions:"Chronic Conditions",
+
+medicationsTitle:"Medication History",
+medicationsDesc:"Current and important previous medications",
+currentMedication:"Current Medication",
+medicineName:"Medication",
+dose:"Dose",
+frequency:"Frequency",
+purpose:"Purpose",
+medicationList:"Medication List",
+
+allergiesTitle:"Allergy History",
+allergiesDesc:"Drug, food, environmental and other allergies",
+allergyItem:"Allergen",
+reaction:"Reaction",
+severity:"Severity",
+
+surgeriesTitle:"Surgery & Hospitalization",
+surgeriesDesc:"Important surgeries, procedures and hospitalizations",
+procedure:"Procedure",
+surgeryDate:"Date",
+hospital:"Hospital",
+doctor:"Doctor",
+
+familyTitle:"Family Medical History",
+familyDesc:"Medically relevant family conditions",
+familyMember:"Family Member",
+familyDisease:"Condition",
+familyAge:"Age at Onset",
+
+vaccinesTitle:"Vaccination Record",
+vaccinesDesc:"Vaccines, dates and doses",
+vaccineName:"Vaccine",
+vaccineDate:"Date",
+doseNumber:"Dose",
+
+lifestyleTitle:"Lifestyle History",
+lifestyleDesc:"Lifestyle factors that may affect health",
+smoking:"Smoking",
+alcohol:"Alcohol",
+exercise:"Exercise",
+occupation:"Occupation",
+lifestyleNotes:"Other Lifestyle Information",
+
+providersTitle:"Healthcare Providers",
+providersDesc:"Doctors and healthcare facilities",
+doctorName:"Doctor Name",
+specialty:"Specialty",
+clinic:"Hospital / Clinic",
+clinicPhone:"Phone",
+
+documentsTitle:"Medical Documents",
+documentsDesc:"Record reports, imaging, documents and notes",
+documentName:"Document",
+documentDate:"Date",
+documentNote:"Notes",
+
+notesTitle:"Medical Summary",
+notesDesc:"A short summary that a doctor can understand quickly",
+medicalSummaryLabel:"My Medical Summary",
+summaryTip:"Tip",
+summaryTipText:"Use this area for the most important information rather than the complete medical record.",
+
+add:"Add",
+
+footer:"My Medical Passport · Personal Health Information"
+
+},
+
+ja: {
+
+appName:"マイ・メディカルパスポート",
+appSubtitle:"個人健康記録",
+
+medicalRecord:"医療記録",
+dashboard:"概要",
+personal:"個人情報",
+emergency:"緊急医療情報",
+conditions:"病歴",
+medications:"服薬歴",
+allergies:"アレルギー",
+surgeries:"手術・入院歴",
+family:"家族歴",
+vaccines:"予防接種",
+lifestyle:"生活歴",
+providers:"医療機関・医師",
+documents:"医療書類",
+notes:"医療サマリー",
+dataTools:"データ",
+
+print:"印刷",
+export:"エクスポート",
+import:"インポート",
+
+welcome:"マイ・メディカルパスポート",
+welcomeText:"重要な健康情報を一つの場所にまとめ、自分や家族、医療従事者がすぐに確認できるようにします。",
+
+editProfile:"プロフィールを作成",
+medicalSummary:"医療サマリーを印刷",
+
+profile:"プロフィール",
+currentMedications:"現在の薬",
+emergencyImportant:"緊急医療情報",
+emergencyHint:"血液型、重度のアレルギー、重要な病気、現在の薬、緊急連絡先を優先して入力してください。",
+recommended:"おすすめ情報",
+
+personalTitle:"個人情報",
+personalDesc:"基本情報と連絡先",
+basicInfo:"基本情報",
+
+fullName:"氏名",
+preferredName:"呼び名",
+dob:"生年月日",
+gender:"性別",
+bloodType:"血液型",
+nationality:"国籍",
+idNumber:"識別番号",
+phone:"電話番号",
+email:"メール",
+address:"住所",
+
+emergencyContact:"緊急連絡先",
+contactName:"氏名",
+relationship:"続柄",
+contactPhone:"電話番号",
+contactEmail:"メール",
+
+emergencyTitle:"緊急医療情報",
+emergencyDesc:"緊急時にすぐ確認できる重要情報",
+criticalInfo:"重要な医療情報",
+criticalHint:"最も重要な医療情報を入力してください。",
+rhFactor:"Rh因子",
+severeAllergies:"重度のアレルギー",
+criticalConditions:"重要な疾患",
+emergencyNotes:"緊急時のメモ",
+
+conditionsTitle:"病気・既往歴",
+conditionsDesc:"過去および現在の重要な病気",
+medicalConditions:"疾患・診断",
+pastHistory:"既往歴",
+hospitalHistory:"入院歴",
+chronicConditions:"慢性疾患",
+
+medicationsTitle:"服薬歴",
+medicationsDesc:"現在および過去の重要な薬",
+currentMedication:"現在の薬",
+medicineName:"薬剤名",
+dose:"用量",
+frequency:"頻度",
+purpose:"目的",
+medicationList:"服薬リスト",
+
+allergiesTitle:"アレルギー歴",
+allergiesDesc:"薬・食品・環境などのアレルギー",
+allergyItem:"アレルゲン",
+reaction:"反応",
+severity:"重症度",
+
+surgeriesTitle:"手術・入院歴",
+surgeriesDesc:"重要な手術、処置、入院",
+procedure:"手術・処置",
+surgeryDate:"日付",
+hospital:"病院",
+doctor:"医師",
+
+familyTitle:"家族歴",
+familyDesc:"医学的に重要な家族の病歴",
+familyMember:"家族",
+familyDisease:"疾患",
+familyAge:"発症年齢",
+
+vaccinesTitle:"予防接種",
+vaccinesDesc:"ワクチン、日付、接種回数",
+vaccineName:"ワクチン",
+vaccineDate:"接種日",
+doseNumber:"回数",
+
+lifestyleTitle:"生活歴",
+lifestyleDesc:"健康に影響する生活習慣",
+smoking:"喫煙",
+alcohol:"飲酒",
+exercise:"運動",
+occupation:"職業",
+lifestyleNotes:"その他",
+
+providersTitle:"医師・医療機関",
+providersDesc:"主治医と医療機関",
+doctorName:"医師名",
+specialty:"診療科",
+clinic:"病院・クリニック",
+clinicPhone:"電話",
+
+documentsTitle:"医療書類",
+documentsDesc:"検査結果、画像、医療書類など",
+documentName:"書類名",
+documentDate:"日付",
+documentNote:"メモ",
+
+notesTitle:"医療サマリー",
+notesDesc:"医師が短時間で理解できる簡潔なまとめ",
+medicalSummaryLabel:"医療サマリー",
+summaryTip:"ヒント",
+summaryTipText:"完全な病歴ではなく、最も重要な情報を記載してください。",
+
+add:"追加",
+
+footer:"My Medical Passport · 個人健康情報"
+
+},
+
+vi: {
+
+appName:"Hộ Chiếu Y Tế Cá Nhân",
+appSubtitle:"Hồ sơ sức khỏe cá nhân",
+
+medicalRecord:"Hồ sơ y tế",
+dashboard:"Tổng quan",
+personal:"Thông tin cá nhân",
+emergency:"Thông tin cấp cứu",
+conditions:"Bệnh sử",
+medications:"Thuốc",
+allergies:"Dị ứng",
+surgeries:"Phẫu thuật / Nhập viện",
+family:"Tiền sử gia đình",
+vaccines:"Tiêm chủng",
+lifestyle:"Lối sống",
+providers:"Bác sĩ / Cơ sở y tế",
+documents:"Tài liệu y tế",
+notes:"Tóm tắt y tế",
+dataTools:"Dữ liệu",
+
+print:"In",
+export:"Xuất dữ liệu",
+import:"Nhập dữ liệu",
+
+welcome:"Hộ Chiếu Y Tế Cá Nhân",
+welcomeText:"Lưu trữ thông tin sức khỏe quan trọng tại một nơi để bạn, gia đình và nhân viên y tế có thể nhanh chóng kiểm tra.",
+
+editProfile:"Tạo hồ sơ",
+medicalSummary:"In tóm tắt",
+
+profile:"Hồ sơ",
+currentMedications:"Thuốc hiện tại",
+emergencyImportant:"Thông tin y tế khẩn cấp",
+emergencyHint:"Ưu tiên nhóm máu, dị ứng nghiêm trọng, bệnh quan trọng, thuốc đang dùng và người liên hệ khẩn cấp.",
+recommended:"Thông tin nên hoàn thành",
+
+personalTitle:"Thông tin cá nhân",
+personalDesc:"Thông tin cơ bản và liên hệ",
+basicInfo:"Thông tin cơ bản",
+
+fullName:"Họ và tên",
+preferredName:"Tên thường gọi",
+dob:"Ngày sinh",
+gender:"Giới tính",
+bloodType:"Nhóm máu",
+nationality:"Quốc tịch",
+idNumber:"Số nhận dạng",
+phone:"Điện thoại",
+email:"Email",
+address:"Địa chỉ",
+
+emergencyContact:"Người liên hệ khẩn cấp",
+contactName:"Tên",
+relationship:"Mối quan hệ",
+contactPhone:"Điện thoại",
+contactEmail:"Email",
+
+emergencyTitle:"Thông tin y tế cấp cứu",
+emergencyDesc:"Thông tin cần được nhìn thấy nhanh trong trường hợp khẩn cấp",
+criticalInfo:"Thông tin y tế quan trọng",
+criticalHint:"Nhập thông tin y tế quan trọng nhất.",
+rhFactor:"Yếu tố Rh",
+severeAllergies:"Dị ứng nghiêm trọng",
+criticalConditions:"Bệnh quan trọng",
+emergencyNotes:"Ghi chú cấp cứu",
+
+conditionsTitle:"Bệnh và tiền sử bệnh",
+conditionsDesc:"Các bệnh quan trọng trong quá khứ và hiện tại",
+medicalConditions:"Bệnh / Chẩn đoán",
+pastHistory:"Tiền sử bệnh",
+hospitalHistory:"Tiền sử nhập viện",
+chronicConditions:"Bệnh mạn tính",
+
+medicationsTitle:"Tiền sử dùng thuốc",
+medicationsDesc:"Thuốc hiện tại và các thuốc quan trọng trước đây",
+currentMedication:"Thuốc đang dùng",
+medicineName:"Tên thuốc",
+dose:"Liều",
+frequency:"Tần suất",
+purpose:"Mục đích",
+medicationList:"Danh sách thuốc",
+
+allergiesTitle:"Tiền sử dị ứng",
+allergiesDesc:"Dị ứng thuốc, thực phẩm, môi trường và các loại khác",
+allergyItem:"Chất gây dị ứng",
+reaction:"Phản ứng",
+severity:"Mức độ",
+
+surgeriesTitle:"Phẫu thuật và nhập viện",
+surgeriesDesc:"Các phẫu thuật, thủ thuật và lần nhập viện quan trọng",
+procedure:"Phẫu thuật / Thủ thuật",
+surgeryDate:"Ngày",
+hospital:"Bệnh viện",
+doctor:"Bác sĩ",
+
+familyTitle:"Tiền sử gia đình",
+familyDesc:"Các bệnh có ý nghĩa y khoa trong gia đình",
+familyMember:"Thành viên",
+familyDisease:"Bệnh",
+familyAge:"Tuổi khởi phát",
+
+vaccinesTitle:"Lịch sử tiêm chủng",
+vaccinesDesc:"Vắc-xin, ngày tiêm và liều",
+vaccineName:"Vắc-xin",
+vaccineDate:"Ngày tiêm",
+doseNumber:"Liều thứ",
+
+lifestyleTitle:"Lối sống",
+lifestyleDesc:"Các yếu tố lối sống có thể ảnh hưởng sức khỏe",
+smoking:"Hút thuốc",
+alcohol:"Rượu bia",
+exercise:"Tập thể dục",
+occupation:"Nghề nghiệp",
+lifestyleNotes:"Thông tin khác",
+
+providersTitle:"Bác sĩ và cơ sở y tế",
+providersDesc:"Bác sĩ và cơ sở chăm sóc sức khỏe chính",
+doctorName:"Tên bác sĩ",
+specialty:"Chuyên khoa",
+clinic:"Bệnh viện / Phòng khám",
+clinicPhone:"Điện thoại",
+
+documentsTitle:"Tài liệu y tế",
+documentsDesc:"Ghi lại báo cáo, hình ảnh và tài liệu y tế",
+documentName:"Tên tài liệu",
+documentDate:"Ngày",
+documentNote:"Ghi chú",
+
+notesTitle:"Tóm tắt y tế",
+notesDesc:"Một bản tóm tắt ngắn để bác sĩ có thể hiểu nhanh",
+medicalSummaryLabel:"Tóm tắt y tế",
+summaryTip:"Mẹo",
+summaryTipText:"Nên ghi thông tin quan trọng nhất thay vì toàn bộ bệnh sử.",
+
+add:"Thêm",
+
+footer:"My Medical Passport · Thông tin sức khỏe cá nhân"
+
+},
+
+th: {
+
+appName:"พาสปอร์ตสุขภาพส่วนบุคคล",
+appSubtitle:"ประวัติสุขภาพส่วนบุคคล",
+
+medicalRecord:"ประวัติการรักษา",
+dashboard:"ภาพรวม",
+personal:"ข้อมูลส่วนบุคคล",
+emergency:"ข้อมูลฉุกเฉิน",
+conditions:"ประวัติการเจ็บป่วย",
+medications:"ประวัติการใช้ยา",
+allergies:"ประวัติแพ้",
+surgeries:"การผ่าตัด / การนอนโรงพยาบาล",
+family:"ประวัติครอบครัว",
+vaccines:"วัคซีน",
+lifestyle:"ประวัติการใช้ชีวิต",
+providers:"แพทย์ / สถานพยาบาล",
+documents:"เอกสารทางการแพทย์",
+notes:"สรุปสุขภาพ",
+dataTools:"ข้อมูล",
+
+print:"พิมพ์",
+export:"ส่งออกข้อมูล",
+import:"นำเข้าข้อมูล",
+
+welcome:"พาสปอร์ตสุขภาพส่วนบุคคล",
+welcomeText:"รวบรวมข้อมูลสุขภาพที่สำคัญไว้ในที่เดียว เพื่อให้คุณ ครอบครัว และบุคลากรทางการแพทย์ตรวจสอบได้อย่างรวดเร็ว",
+
+editProfile:"สร้างโปรไฟล์",
+medicalSummary:"พิมพ์สรุปสุขภาพ",
+
+profile:"โปรไฟล์",
+currentMedications:"ยาที่ใช้อยู่",
+emergencyImportant:"ข้อมูลทางการแพทย์ฉุกเฉิน",
+emergencyHint:"ควรกรอกกรุ๊ปเลือด อาการแพ้รุนแรง โรคสำคัญ ยาที่ใช้อยู่ และผู้ติดต่อฉุกเฉินก่อน",
+recommended:"ข้อมูลที่แนะนำ",
+
+personalTitle:"ข้อมูลส่วนบุคคล",
+personalDesc:"ข้อมูลพื้นฐานและข้อมูลติดต่อ",
+basicInfo:"ข้อมูลพื้นฐาน",
+
+fullName:"ชื่อ-นามสกุล",
+preferredName:"ชื่อที่ใช้เรียก",
+dob:"วันเกิด",
+gender:"เพศ",
+bloodType:"กรุ๊ปเลือด",
+nationality:"สัญชาติ",
+idNumber:"หมายเลขประจำตัว",
+phone:"โทรศัพท์",
+email:"อีเมล",
+address:"ที่อยู่",
+
+emergencyContact:"ผู้ติดต่อฉุกเฉิน",
+contactName:"ชื่อ",
+relationship:"ความสัมพันธ์",
+contactPhone:"โทรศัพท์",
+contactEmail:"อีเมล",
+
+emergencyTitle:"ข้อมูลทางการแพทย์ฉุกเฉิน",
+emergencyDesc:"ข้อมูลที่ควรค้นหาได้อย่างรวดเร็วเมื่อเกิดเหตุฉุกเฉิน",
+criticalInfo:"ข้อมูลทางการแพทย์ที่สำคัญ",
+criticalHint:"กรอกข้อมูลทางการแพทย์ที่สำคัญที่สุด",
+rhFactor:"ปัจจัย Rh",
+severeAllergies:"การแพ้รุนแรง",
+criticalConditions:"โรคสำคัญ",
+emergencyNotes:"หมายเหตุฉุกเฉิน",
+
+conditionsTitle:"โรคและประวัติการเจ็บป่วย",
+conditionsDesc:"โรคสำคัญในอดีตและปัจจุบัน",
+medicalConditions:"โรค / การวินิจฉัย",
+pastHistory:"ประวัติการเจ็บป่วย",
+hospitalHistory:"ประวัติการนอนโรงพยาบาล",
+chronicConditions:"โรคเรื้อรัง",
+
+medicationsTitle:"ประวัติการใช้ยา",
+medicationsDesc:"ยาที่ใช้อยู่และยาสำคัญในอดีต",
+currentMedication:"ยาที่ใช้อยู่",
+medicineName:"ชื่อยา",
+dose:"ขนาดยา",
+frequency:"ความถี่",
+purpose:"วัตถุประสงค์",
+medicationList:"รายการยา",
+
+allergiesTitle:"ประวัติการแพ้",
+allergiesDesc:"การแพ้ยา อาหาร สิ่งแวดล้อม และอื่น ๆ",
+allergyItem:"สารก่อภูมิแพ้",
+reaction:"อาการ",
+severity:"ความรุนแรง",
+
+surgeriesTitle:"การผ่าตัดและการนอนโรงพยาบาล",
+surgeriesDesc:"การผ่าตัด หัตถการ และการนอนโรงพยาบาลที่สำคัญ",
+procedure:"การผ่าตัด / หัตถการ",
+surgeryDate:"วันที่",
+hospital:"โรงพยาบาล",
+doctor:"แพทย์",
+
+familyTitle:"ประวัติครอบครัว",
+familyDesc:"โรคที่มีความสำคัญทางการแพทย์ในครอบครัว",
+familyMember:"สมาชิกครอบครัว",
+familyDisease:"โรค",
+familyAge:"อายุที่เริ่มมีอาการ",
+
+vaccinesTitle:"ประวัติการฉีดวัคซีน",
+vaccinesDesc:"วัคซีน วันที่ และจำนวนครั้ง",
+vaccineName:"วัคซีน",
+vaccineDate:"วันที่",
+doseNumber:"เข็มที่",
+
+lifestyleTitle:"ประวัติการใช้ชีวิต",
+lifestyleDesc:"พฤติกรรมที่อาจส่งผลต่อสุขภาพ",
+smoking:"การสูบบุหรี่",
+alcohol:"การดื่มแอลกอฮอล์",
+exercise:"การออกกำลังกาย",
+occupation:"อาชีพ",
+lifestyleNotes:"ข้อมูลอื่น ๆ",
+
+providersTitle:"แพทย์และสถานพยาบาล",
+providersDesc:"แพทย์และสถานพยาบาลหลัก",
+doctorName:"ชื่อแพทย์",
+specialty:"สาขา",
+clinic:"โรงพยาบาล / คลินิก",
+clinicPhone:"โทรศัพท์",
+
+documentsTitle:"เอกสารทางการแพทย์",
+documentsDesc:"บันทึกผลตรวจ ภาพถ่าย และเอกสารทางการแพทย์",
+documentName:"ชื่อเอกสาร",
+documentDate:"วันที่",
+documentNote:"หมายเหตุ",
+
+notesTitle:"สรุปสุขภาพ",
+notesDesc:"สรุปสั้น ๆ ที่แพทย์สามารถเข้าใจได้อย่างรวดเร็ว",
+medicalSummaryLabel:"สรุปสุขภาพของฉัน",
+summaryTip:"คำแนะนำ",
+summaryTipText:"ใช้ส่วนนี้สำหรับข้อมูลสำคัญที่สุด ไม่จำเป็นต้องใส่ประวัติทั้งหมด",
+
+add:"เพิ่ม",
+
+footer:"My Medical Passport · ข้อมูลสุขภาพส่วนบุคคล"
+
+}
+
+};
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let medicalData = {
+
+    medications: [],
+    allergies: [],
+    surgeries: [],
+    family: [],
+    vaccines: [],
+    documents: []
+
+};
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showSection(id, button) {
+
+    document
+        .querySelectorAll(".section")
+        .forEach(section => {
+            section.classList.remove("active");
+        });
+
+    const target = document.getElementById(id);
+
+    if (target) {
+        target.classList.add("active");
+    }
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(item => {
+            item.classList.remove("active");
+        });
+
+    if (button) {
+        button.classList.add("active");
+    }
+
+    document.getElementById("sidebar")
+        .classList.remove("open");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+function changeLanguage(lang) {
+
+    const dict = translations[lang];
+
+    document
+        .querySelectorAll("[data-i18n]")
+        .forEach(element => {
+
+            const key = element.dataset.i18n;
+
+            if (dict[key]) {
+                element.textContent = dict[key];
+            }
+
+        });
+
+    document.documentElement.lang = lang;
+
+    localStorage.setItem(
+        "medicalPassportLanguage",
+        lang
+    );
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "medicalPassportDark",
+        document.body.classList.contains("dark")
+    );
+
+}
+
+
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
+
+function saveBasicFields() {
+
+    const fields =
+        document.querySelectorAll("[data-save]");
+
+    const data = {};
+
+    fields.forEach(field => {
+        data[field.id] = field.value;
+    });
+
+    medicalData.basic = data;
+
+    saveAll();
+
+    updateDashboard();
+
+}
+
+
+function saveAll() {
+
+    localStorage.setItem(
+        "myMedicalPassport",
+        JSON.stringify(medicalData)
+    );
+
+}
+
+
+function loadData() {
+
+    const saved =
+        localStorage.getItem("myMedicalPassport");
+
+    if (saved) {
+
+        try {
+
+            medicalData =
+                JSON.parse(saved);
+
+        } catch(e) {
+
+            console.error(e);
+
+        }
+
+    }
+
+    if (!medicalData) {
+        medicalData = {};
+    }
+
+    medicalData.medications ||= [];
+    medicalData.allergies ||= [];
+    medicalData.surgeries ||= [];
+    medicalData.family ||= [];
+    medicalData.vaccines ||= [];
+    medicalData.documents ||= [];
+
+    if (medicalData.basic) {
+
+        Object.entries(
+            medicalData.basic
+        ).forEach(([id,value]) => {
+
+            const field =
+                document.getElementById(id);
+
+            if (field) {
+                field.value = value;
+            }
+
+        });
+
+    }
+
+    renderAll();
+
+}
+
+
+/* =========================================================
+   MEDICATIONS
+========================================================= */
+
+function addMedication() {
+
+    const name =
+        document.getElementById("medName").value.trim();
+
+    if (!name) {
+        alert("Please enter medication name.");
+        return;
+    }
+
+    medicalData.medications.push({
+
+        id: Date.now(),
+
+        name,
+
+        dose:
+            document.getElementById("medDose").value,
+
+        frequency:
+            document.getElementById("medFrequency").value,
+
+        purpose:
+            document.getElementById("medPurpose").value
+
+    });
+
+    clearFields([
+        "medName",
+        "medDose",
+        "medFrequency",
+        "medPurpose"
+    ]);
+
+    saveAll();
+
+    renderMedications();
+
+    updateDashboard();
+
+}
+
+
+function renderMedications() {
+
+    const list =
+        document.getElementById("medicationList");
+
+    list.innerHTML = "";
+
+    if (
+        medicalData.medications.length === 0
+    ) {
+
+        list.innerHTML =
+            "<div style='color:var(--text-soft)'>No medications added.</div>";
+
+        return;
+
+    }
+
+    medicalData.medications
+        .forEach(item => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "repeat-item";
+
+            div.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        💊 ${escapeHTML(item.name)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(item.dose || "")}
+                        ·
+                        ${escapeHTML(item.frequency || "")}
+                        ${item.purpose
+                            ? " · " + escapeHTML(item.purpose)
+                            : ""}
+                    </small>
+
+                </div>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeItem('medications',${item.id})">
+
+                    ×
+
+                </button>
+
+            `;
+
+            list.appendChild(div);
+
+        });
+
+}
+
+
+/* =========================================================
+   ALLERGIES
+========================================================= */
+
+function addAllergy() {
+
+    const name =
+        document.getElementById("allergyName")
+        .value.trim();
+
+    if (!name) {
+        alert("Please enter allergen.");
+        return;
+    }
+
+    medicalData.allergies.push({
+
+        id: Date.now(),
+
+        name,
+
+        reaction:
+            document.getElementById("allergyReaction")
+            .value,
+
+        severity:
+            document.getElementById("allergySeverity")
+            .value
+
+    });
+
+    clearFields([
+        "allergyName",
+        "allergyReaction"
+    ]);
+
+    saveAll();
+
+    renderAllergies();
+
+    updateDashboard();
+
+}
+
+
+function renderAllergies() {
+
+    const list =
+        document.getElementById("allergyList");
+
+    list.innerHTML = "";
+
+    medicalData.allergies
+        .forEach(item => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "repeat-item";
+
+            div.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ⚠️ ${escapeHTML(item.name)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(item.reaction || "")}
+                        ·
+                        ${escapeHTML(item.severity || "")}
+                    </small>
+
+                </div>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeItem('allergies',${item.id})">
+
+                    ×
+
+                </button>
+
+            `;
+
+            list.appendChild(div);
+
+        });
+
+}
+
+
+/* =========================================================
+   SURGERIES
+========================================================= */
+
+function addSurgery() {
+
+    const name =
+        document.getElementById("surgeryName")
+        .value.trim();
+
+    if (!name) {
+        alert("Please enter procedure.");
+        return;
+    }
+
+    medicalData.surgeries.push({
+
+        id: Date.now(),
+
+        name,
+
+        date:
+            document.getElementById("surgeryDate").value,
+
+        hospital:
+            document.getElementById("surgeryHospital").value,
+
+        doctor:
+            document.getElementById("surgeryDoctor").value
+
+    });
+
+    clearFields([
+        "surgeryName",
+        "surgeryDate",
+        "surgeryHospital",
+        "surgeryDoctor"
+    ]);
+
+    saveAll();
+
+    renderSurgeries();
+
+    updateDashboard();
+
+}
+
+
+function renderSurgeries() {
+
+    const list =
+        document.getElementById("surgeryList");
+
+    list.innerHTML = "";
+
+    medicalData.surgeries
+        .forEach(item => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "repeat-item";
+
+            div.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        🏥 ${escapeHTML(item.name)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(item.date || "")}
+                        ·
+                        ${escapeHTML(item.hospital || "")}
+                        ${item.doctor
+                            ? " · " + escapeHTML(item.doctor)
+                            : ""}
+                    </small>
+
+                </div>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeItem('surgeries',${item.id})">
+
+                    ×
+
+                </button>
+
+            `;
+
+            list.appendChild(div);
+
+        });
+
+}
+
+
+/* =========================================================
+   FAMILY
+========================================================= */
+
+function addFamilyHistory() {
+
+    const member =
+        document.getElementById("familyMember")
+        .value.trim();
+
+    const disease =
+        document.getElementById("familyDisease")
+        .value.trim();
+
+    if (!member || !disease) {
+        alert("Please enter family member and condition.");
+        return;
+    }
+
+    medicalData.family.push({
+
+        id: Date.now(),
+
+        member,
+
+        disease,
+
+        age:
+            document.getElementById("familyAge").value
+
+    });
+
+    clearFields([
+        "familyMember",
+        "familyDisease",
+        "familyAge"
+    ]);
+
+    saveAll();
+
+    renderFamily();
+
+}
+
+
+function renderFamily() {
+
+    const list =
+        document.getElementById("familyList");
+
+    list.innerHTML = "";
+
+    medicalData.family
+        .forEach(item => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "repeat-item";
+
+            div.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        👨‍👩‍👧 ${escapeHTML(item.member)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(item.disease)}
+                        ${item.age
+                            ? " · Age " + escapeHTML(item.age)
+                            : ""}
+                    </small>
+
+                </div>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeItem('family',${item.id})">
+
+                    ×
+
+                </button>
+
+            `;
+
+            list.appendChild(div);
+
+        });
+
+}
+
+
+/* =========================================================
+   VACCINES
+========================================================= */
+
+function addVaccine() {
+
+    const name =
+        document.getElementById("vaccineName")
+        .value.trim();
+
+    if (!name) {
+        alert("Please enter vaccine name.");
+        return;
+    }
+
+    medicalData.vaccines.push({
+
+        id: Date.now(),
+
+        name,
+
+        date:
+            document.getElementById("vaccineDate").value,
+
+        dose:
+            document.getElementById("vaccineDose").value
+
+    });
+
+    clearFields([
+        "vaccineName",
+        "vaccineDate",
+        "vaccineDose"
+    ]);
+
+    saveAll();
+
+    renderVaccines();
+
+}
+
+
+function renderVaccines() {
+
+    const list =
+        document.getElementById("vaccineList");
+
+    list.innerHTML = "";
+
+    medicalData.vaccines
+        .forEach(item => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "repeat-item";
+
+            div.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        💉 ${escapeHTML(item.name)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(item.date || "")}
+                        ·
+                        ${escapeHTML(item.dose || "")}
+                    </small>
+
+                </div>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeItem('vaccines',${item.id})">
+
+                    ×
+
+                </button>
+
+            `;
+
+            list.appendChild(div);
+
+        });
+
+}
+
+
+/* =========================================================
+   DOCUMENTS
+========================================================= */
+
+function addDocument() {
+
+    const name =
+        document.getElementById("documentName")
+        .value.trim();
+
+    if (!name) {
+        alert("Please enter document name.");
+        return;
+    }
+
+    medicalData.documents.push({
+
+        id: Date.now(),
+
+        name,
+
+        date:
+            document.getElementById("documentDate").value,
+
+        note:
+            document.getElementById("documentNote").value
+
+    });
+
+    clearFields([
+        "documentName",
+        "documentDate",
+        "documentNote"
+    ]);
+
+    saveAll();
+
+    renderDocuments();
+
+}
+
+
+function renderDocuments() {
+
+    const list =
+        document.getElementById("documentList");
+
+    list.innerHTML = "";
+
+    medicalData.documents
+        .forEach(item => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "repeat-item";
+
+            div.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        📄 ${escapeHTML(item.name)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(item.date || "")}
+                        ${item.note
+                            ? " · " + escapeHTML(item.note)
+                            : ""}
+                    </small>
+
+                </div>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeItem('documents',${item.id})">
+
+                    ×
+
+                </button>
+
+            `;
+
+            list.appendChild(div);
+
+        });
+
+}
+
+
+/* =========================================================
+   REMOVE
+========================================================= */
+
+function removeItem(type,id) {
+
+    medicalData[type] =
+        medicalData[type]
+        .filter(item => item.id !== id);
+
+    saveAll();
+
+    renderAll();
+
+    updateDashboard();
+
+}
+
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+function clearFields(ids) {
+
+    ids.forEach(id => {
+
+        const el =
+            document.getElementById(id);
+
+        if (el) {
+            el.value = "";
+        }
+
+    });
+
+}
+
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function updateDashboard() {
+
+    document.getElementById("medCount")
+        .textContent =
+        medicalData.medications.length;
+
+    document.getElementById("allergyCount")
+        .textContent =
+        medicalData.allergies.length;
+
+    document.getElementById("surgeryCount")
+        .textContent =
+        medicalData.surgeries.length;
+
+    const name =
+        document.getElementById("fullName");
+
+    document.getElementById("profileStatus")
+        .textContent =
+        name && name.value
+            ? "✓"
+            : "—";
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderAll() {
+
+    renderMedications();
+    renderAllergies();
+    renderSurgeries();
+    renderFamily();
+    renderVaccines();
+    renderDocuments();
+
+    updateDashboard();
+
+}
+
+
+/* =========================================================
+   EXPORT JSON
+========================================================= */
+
+function exportData() {
+
+    saveBasicFields();
+
+    const data = {
+
+        exportedAt:
+            new Date().toISOString(),
+
+        version:"1.0",
+
+        medicalPassport:
+            medicalData
+
+    };
+
+    const blob =
+        new Blob(
+            [JSON.stringify(data,null,2)],
+            {type:"application/json"}
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        "my-medical-passport.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* =========================================================
+   IMPORT JSON
+========================================================= */
+
+function importData(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    const reader =
+        new FileReader();
+
+    reader.onload = function(e) {
+
+        try {
+
+            const imported =
+                JSON.parse(e.target.result);
+
+            if (
+                imported.medicalPassport
+            ) {
+
+                medicalData =
+                    imported.medicalPassport;
+
+            } else {
+
+                medicalData =
+                    imported;
+
+            }
+
+            saveAll();
+
+            loadData();
+
+            alert(
+                "Medical data imported successfully."
+            );
+
+        } catch(error) {
+
+            alert(
+                "Invalid medical data file."
+            );
+
+        }
+
+    };
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================================================
+   AUTO SAVE
+========================================================= */
+
+document
+    .querySelectorAll("[data-save]")
+    .forEach(field => {
+
+        field.addEventListener(
+            "input",
+            saveBasicFields
+        );
+
+        field.addEventListener(
+            "change",
+            saveBasicFields
+        );
+
+    });
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const savedLanguage =
+            localStorage.getItem(
+                "medicalPassportLanguage"
+            ) || "zh";
+
+        document.getElementById(
+            "language"
+        ).value = savedLanguage;
+
+        changeLanguage(savedLanguage);
+
+        if (
+            localStorage.getItem(
+                "medicalPassportDark"
+            ) === "true"
+        ) {
+
+            document.body.classList.add("dark");
+
+        }
+
+        loadData();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
